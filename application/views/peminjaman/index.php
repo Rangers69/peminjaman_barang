@@ -48,12 +48,12 @@
                                     <?php $i=1; foreach ($peminjaman as $row) : ?>
                                         <tr>
                                             <td><?= $i++?></td>
-                                            <td><?= htmlspecialchars($row['nama_peminjam']); ?></td>
-                                            <td><?= htmlspecialchars($row['email']); ?></td>
-                                            <td><?= htmlspecialchars(date('d F Y', strtotime($row['tanggal_pinjam']))); ?></td>
-                                            <td><?= htmlspecialchars(date('d F Y', strtotime($row['tanggal_kembali']))); ?></td>
+                                            <td><?= $row['nama_peminjam']; ?></td>
+                                            <td><?= $row['email']; ?></td>
+                                            <td><?= date('d F Y', strtotime($row['tanggal_pinjam'])); ?></td>
+                                            <td><?= date('d F Y', strtotime($row['tanggal_kembali'])); ?></td>
                                             <td><?= $row['status'] ? 'Dipinjam' : 'Dikembalikan'; ?></td>
-                                            <td><?= htmlspecialchars($row['deskripsi']); ?></td>
+                                            <td><?= $row['deskripsi']; ?></td>
                                             <td>
                                                 <?php if (!empty($row['gambar_pengambilan'])) : ?>
                                                     <a href="<?= base_url('uploads/peminjaman/' . $row['gambar_pengambilan']); ?>" target="_blank">

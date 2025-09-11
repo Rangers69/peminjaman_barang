@@ -28,7 +28,7 @@
       <div class="image">
           <img src="" class="" alt="">
         </div>
-      <p class="login-box-msg">Register a new membership</p>
+      <p class="login-box-msg">Register a newrrr membership</p>
 
       <form method="post" action= <?= base_url('auth/register');?> >
         <div class="input-group mb-3">

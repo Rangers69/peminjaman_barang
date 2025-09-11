@@ -65,7 +65,7 @@
                                             </td>
                                            
                                             <td class="action-buttons">
-                                                <button data-toggle="modal" data-target="#edit<?= $u['id_peminjaman']?>" class="btn btn-warning btn-sm"><i 
+                                                <button data-toggle="modal" data-target="#edit<?= $row['id_peminjaman']?>" class="btn btn-warning btn-sm"><i 
                                                 class="fas fa-edit"></i>Edit</button>
                                                 <a href="<?= base_url('peminjaman/delete/' . $row['id_peminjaman']); ?>" class="btn btn-danger btn-sm" onclick="return 
 												confirm('Apakah anda yakin menghapus data ini?')"><i class="fas fa-trash"></i>Delete</a>

@@ -25,7 +25,7 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg">Sign in to start yourkkkkk session</p>
       <?= $this->session->flashdata('message'); ?>
       <form class="user" method="post" action= <?= base_url('auth/login');?> >
         <div class="input-group mb-3">

@@ -138,6 +138,7 @@
     </div>
 </div>
 
+ <?php foreach($peminjaman as $row) { ?>
 <div class="modal fade" id="editPeminjamanModal" tabindex="-1" role="dialog" aria-labelledby="editPeminjamanModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -193,6 +194,7 @@
         </div>
     </div>
 </div>
+<?php } ?>
 
 <script src="<?= base_url('assets/') ?>plugins/jquery/jquery.min.js"></script>
 <script src="<?= base_url('assets/') ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

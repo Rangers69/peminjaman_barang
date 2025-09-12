@@ -124,7 +124,7 @@ class Peminjaman extends CI_Controller {
             ];
 
             // Get old data for image deletion
-            $old_data = $this->Peminjaman_model->get_peminjaman_by_id($id);
+            $old_data = $this->Peminjaman_model->get_peminjaman_by_id($id_peminjaman);
 
             $config['upload_path']   = './uploads/peminjaman/';
             $config['allowed_types'] = 'gif|jpg|png|jpeg';

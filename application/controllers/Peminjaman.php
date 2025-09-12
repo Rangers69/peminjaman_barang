@@ -115,7 +115,7 @@ class Peminjaman extends CI_Controller {
             // Get the ID for the update from the correct field
             $id_peminjaman = $this->input->post('id_peminjaman');
 
-            var_dump($this->input->post('tanggal_pinjam'));
+            var_dump($this->input->post('tanggal_kembali'));
             die;
             $data_update = [
                 'id_userpinjam'      => $this->input->post('id_userpinjam'),

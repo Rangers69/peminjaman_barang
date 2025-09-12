@@ -113,7 +113,7 @@ class Peminjaman extends CI_Controller {
             return;
         } else {
             // Get the ID for the update from the correct field
-            $id = $this->input->post('id_peminjaman');
+            $id_peminjaman = $this->input->post('id_peminjaman');
 
             $data_update = [
                 'id_userpinjam'      => $this->input->post('id_userpinjam'),

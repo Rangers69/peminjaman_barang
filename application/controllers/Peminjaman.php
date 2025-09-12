@@ -123,13 +123,15 @@ class Peminjaman extends CI_Controller {
                 'deskripsi'          => $this->input->post('deskripsi'), 
             ];
 
-            // Perform the update
-            if ($this->Peminjaman_model->update_peminjaman($id_peminjaman, $data_update)) {
+            $data= $this->Peminjaman_model->update_peminjaman($id_peminjaman, $data_update);
+
+
+            if ($data == true) {
                 $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di edit</div>');
 			    redirect('peminjaman');
-                echo json_encode(['status' => 'success', 'message' => 'Data peminjaman berhasil diperbarui!']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Gagal memperbarui data peminjaman.']);
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Gagal di edit</div>');
+			    redirect('peminjaman');
             }
         }
     }

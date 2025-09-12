@@ -120,8 +120,8 @@ class Peminjaman extends CI_Controller {
                 'email'              => $this->input->post('email'),
                 'tanggal_pinjam'     => $this->input->post('tanggal_pinjam'),
                 'tanggal_kembali'    => $this->input->post('tanggal_kembali'),
-                'status'             => $this->input->post('status')
-                'deskripsi'          => $this->input->post('deskripsi')
+                'status'             => $this->input->post('status'),
+                'deskripsi'          => $this->input->post('deskripsi'), 
             ];
 
             // Get old data for image deletion

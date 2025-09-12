@@ -174,10 +174,7 @@
                     </div>
                     <div class="form-group">
                         <label for="edit_status">Status</label>
-                        <select class="form-control" id="edit_status" name="status" value="<?= $row['status'] ? 'Dipinjam' : 'Dikembalikan'; ?>" readonly>
-                            <option value="Dipinjam">Dipinjam</option>
-                            <option value="Dikembalikan">Dikembalikan</option>
-                        </select>
+                        <input type="text" class="form-control" id="edit_status" name="status" value="<?= $row['status'] ? 'Dipinjam' : 'Dikembalikan'; ?>" readonly>
                     </div>
                     <div class="form-group">
                         <label for="edit_gambar_pengambilan">Gambar Pengambilan</label>

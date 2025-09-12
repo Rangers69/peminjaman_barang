@@ -32,9 +32,9 @@ class Peminjaman_model extends CI_Model {
     {
         var_dump($id);
         die;
-        $this->db->where('id_peminjaman', $id);
+        $this->db->where('peminjaman', $id);
 
-        return $this->db->update('peminjaman', $data);
+        return $this->db->update('peminjaman', $data_update);
 
     }
 

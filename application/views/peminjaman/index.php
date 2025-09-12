@@ -154,13 +154,13 @@
                     
                     <div class="form-group">
                         <label for="edit_id_userpinjam">Nama Peminjam</label>
-                        <input type="text" class="form-control" value="<?= $row['nama_peminjam']; ?>" disabled>
+                        <input type="text" class="form-control" value="<?= $row['nama_peminjam']; ?>" readonly>
                         <input type="hidden" name="id_userpinjam" value="<?= $row['id_userpinjam']; ?>">
                     </div>
                     
                     <div class="form-group">
                         <label for="edit_email">Email</label>
-                        <input type="email" class="form-control" value="<?= $row['email']; ?>" disabled>
+                        <input type="email" class="form-control" value="<?= $row['email']; ?>" readonly>
                         <input type="hidden" name="email" value="<?= $row['email']; ?>">
                     </div>
 
@@ -174,7 +174,7 @@
                     </div>
                     <div class="form-group">
                         <label for="edit_status">Status</label>
-                        <select class="form-control" id="edit_status" name="status" required>
+                        <select class="form-control" id="edit_status" name="status" value="<?= $row['status'] ? 'Dipinjam' : 'Dikembalikan'; ?>" readonly>
                             <option value="Dipinjam">Dipinjam</option>
                             <option value="Dikembalikan">Dikembalikan</option>
                         </select>

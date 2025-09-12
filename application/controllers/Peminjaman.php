@@ -96,10 +96,8 @@ class Peminjaman extends CI_Controller {
     }
 
     
-    public function update($id)
+    public function update()
     {
-        var_dump($id);
-        die;
         // Set the validation rules using the correct form field names
         $this->form_validation->set_rules('id_userpinjam', 'ID Userpinjam', 'required|trim');
         $this->form_validation->set_rules('id_userpinjam', 'ID Peminjam', 'required|trim');
@@ -126,7 +124,7 @@ class Peminjaman extends CI_Controller {
             ];
 
             // Get old data for image deletion
-            $old_data = $this->Peminjaman_model->get_peminjaman_by_id($id);
+            $old_data = $this->Peminjaman_model->get_peminjaman_by_id();
 
             $config['upload_path']   = './uploads/peminjaman/';
             $config['allowed_types'] = 'gif|jpg|png|jpeg';

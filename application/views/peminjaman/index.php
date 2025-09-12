@@ -180,12 +180,6 @@
                         <label for="deskripsi">Deskripsi</label>
                         <input type="text"  class="form-control" id="deskripsi" name="deskripsi" rows="3" required>
                     </div>
-                    <div class="form-group">
-                        <label for="edit_gambar_pengambilan">Gambar Pengambilan</label>
-                        <input type="file" class="form-control-file" id="edit_gambar_pengambilan" name="gambar_pengambilan" accept="image/*">
-                        <small class="form-text text-muted">Biarkan kosong jika tidak ingin mengubah gambar.</small>
-                        <div id="current_gambar_pengambilan"></div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>

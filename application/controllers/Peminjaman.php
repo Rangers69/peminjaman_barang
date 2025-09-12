@@ -96,8 +96,10 @@ class Peminjaman extends CI_Controller {
     }
 
     
-    public function update()
+    public function update($id)
     {
+        var_dump($id);
+        die;
         // Set the validation rules using the correct form field names
         $this->form_validation->set_rules('id_userpinjam', 'ID Userpinjam', 'required|trim');
         $this->form_validation->set_rules('id_userpinjam', 'ID Peminjam', 'required|trim');
@@ -170,8 +172,6 @@ class Peminjaman extends CI_Controller {
 
             // Perform the update
             if ($this->Peminjaman_model->update_peminjaman($id_peminjaman, $data_update)) {
-                var_dump($id_peminjaman);
-                die;
                 $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di edit</div>');
 			    redirect('peminjaman');
                 echo json_encode(['status' => 'success', 'message' => 'Data peminjaman berhasil diperbarui!']);

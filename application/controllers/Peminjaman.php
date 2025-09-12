@@ -124,51 +124,6 @@ class Peminjaman extends CI_Controller {
                 'deskripsi'          => $this->input->post('deskripsi'), 
             ];
 
-            // Get old data for image deletion
-            $old_data = $this->Peminjaman_model->get_peminjaman_by_id();
-
-            $config['upload_path']   = './uploads/peminjaman/';
-            $config['allowed_types'] = 'gif|jpg|png|jpeg';
-            $config['max_size']      = 2048;
-            $config['encrypt_name']  = TRUE;
-
-            $this->load->library('upload', $config);
-
-            // Handle Gambar Pengambilan
-            if (!empty($_FILES['gambar_pengambilan']['name'])) {
-                if ($this->upload->do_upload('gambar_pengambilan')) {
-                    $upload_data = $this->upload->data();
-                    $data_update['gambar_pengambilan'] = $upload_data['file_name'];
-                    
-                    // Delete old image if it exists
-                    if ($old_data && !empty($old_data['gambar_pengambilan']) && file_exists($config['upload_path'] . $old_data['gambar_pengambilan'])) {
-                        unlink($config['upload_path'] . $old_data['gambar_pengambilan']);
-                    }
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Upload Gambar Pengambilan gagal: ' . $this->upload->display_errors()]);
-                    return;
-                }
-            }
-
-            // Handle Gambar Pengembalian
-            // Note: The HTML form does not have an input for 'edit_gambar_pengembalian'.
-            // You will need to add this to your form for this code to work.
-            if (!empty($_FILES['gambar_pengembalian']['name'])) {
-                $this->upload->initialize($config); // Re-initialize for the second upload
-                if ($this->upload->do_upload('gambar_pengembalian')) {
-                    $upload_data = $this->upload->data();
-                    $data_update['gambar_pengembalian'] = $upload_data['file_name'];
-                    
-                    // Delete old image if it exists
-                    if ($old_data && !empty($old_data['gambar_pengembalian']) && file_exists($config['upload_path'] . $old_data['gambar_pengembalian'])) {
-                        unlink($config['upload_path'] . $old_data['gambar_pengembalian']);
-                    }
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Upload Gambar Pengembalian gagal: ' . $this->upload->display_errors()]);
-                    return;
-                }
-            }
-
             // Perform the update
             if ($this->Peminjaman_model->update_peminjaman($id_peminjaman, $data_update)) {
                 $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di edit</div>');

@@ -115,14 +115,11 @@ class Peminjaman extends CI_Controller {
             // Get the ID for the update from the correct field
             $id_peminjaman = $this->input->post('id_peminjaman');
 
-            var_dump($this->input->post('tanggal_kembali'));
-            die;
+            //var_dump($this->input->post('tanggal_kembali'));
+            //die;
             $data_update = [
-                'id_userpinjam'      => $this->input->post('id_userpinjam'),
-                'email'              => $this->input->post('email'),
                 'tanggal_pinjam'     => $this->input->post('tanggal_pinjam'),
                 'tanggal_kembali'    => $this->input->post('tanggal_kembali'),
-                'status'             => $this->input->post('status'),
                 'deskripsi'          => $this->input->post('deskripsi'), 
             ];
 

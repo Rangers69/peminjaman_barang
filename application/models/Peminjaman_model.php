@@ -20,6 +20,8 @@ class Peminjaman_model extends CI_Model {
 
     public function get_peminjaman_by_id($id)
     {
+        var_dump($id);
+        die;
         return $this->db->get_where('peminjaman', ['id' => $id])->row_array();
     }
 

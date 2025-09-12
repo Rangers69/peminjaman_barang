@@ -96,10 +96,10 @@ class Peminjaman extends CI_Controller {
     }
 
     
-    public function update($id)
+    public function update()
     {
-        var_dump($id);
-        die;
+        //var_dump($id);
+        //die;
         // Set the validation rules using the correct form field names
         $this->form_validation->set_rules('id_userpinjam', 'ID Userpinjam', 'required|trim');
         $this->form_validation->set_rules('id_userpinjam', 'ID Peminjam', 'required|trim');

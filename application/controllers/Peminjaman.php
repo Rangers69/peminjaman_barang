@@ -22,8 +22,14 @@ class Peminjaman extends CI_Controller {
         $data['title'] = 'Data Peminjaman';
         // Ambil data user dari session, sesuaikan dengan sistem otentikasi Anda
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        //var_dump($data['user']);
+        //die();
+        if ($data['user'] ['role'] != 'customer') {
+             $data['peminjaman'] = $this->Peminjaman_model->get_all_peminjaman();
+        } else {
+             $data['peminjaman'] = $this->Peminjaman_model->get_peminjaman_by_user();
 
-        $data['peminjaman'] = $this->Peminjaman_model->get_all_peminjaman();
+        }
 
          //var_dump($data['peminjaman']);
          //die();
@@ -99,12 +105,9 @@ class Peminjaman extends CI_Controller {
     public function update()
     {
         // Set the validation rules using the correct form field names
-        $this->form_validation->set_rules('id_userpinjam', 'ID Userpinjam', 'required|trim');
-        $this->form_validation->set_rules('id_userpinjam', 'ID Peminjam', 'required|trim');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
         $this->form_validation->set_rules('tanggal_pinjam', 'Tanggal Pinjam', 'required');
         $this->form_validation->set_rules('tanggal_kembali', 'Tanggal Kembali', 'required');
-        $this->form_validation->set_rules('status', 'Status', 'required');
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
 
         // Check if validation passes
         if ($this->form_validation->run() == FALSE) {

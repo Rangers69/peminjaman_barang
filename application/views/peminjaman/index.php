@@ -151,7 +151,7 @@
             </div>
             <form id="formEditPeminjaman" enctype="multipart/form-data" action="<?= base_url('peminjaman/update'); ?>" method="post">
                 <div class="modal-body">
-                    <input type="hidden" id="edit_id" name="id_userpinjam">
+                    <input type="hidden" id="edit_id" name="id_peminjaman" value="<?= $row['id_peminjaman']; ?>">
                     
                     <div class="form-group">
                         <label for="edit_id_userpinjam">Nama Peminjam</label>
@@ -167,11 +167,11 @@
 
                     <div class="form-group">
                         <label for="edit_tanggal_pinjam">Tanggal Pinjam</label>
-                        <input type="date" class="form-control" id="edit_tanggal_pinjam" name="tanggal_pinjam" required>
+                        <input type="date" class="form-control" id="edit_tanggal_pinjam" name="tanggal_pinjam" value="<?= date('Y-m-d', strtotime($row['tanggal_pinjam'])) ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="edit_tanggal_kembali">Tanggal Kembali</label>
-                        <input type="date" class="form-control" id="edit_tanggal_kembali" name="tanggal_kembali" required>
+                        <input type="date" class="form-control" id="edit_tanggal_kembali" name="tanggal_kembali" value="<?= date('Y-m-d', strtotime($row['tanggal_kembali'])) ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="edit_status">Status</label>
@@ -179,7 +179,7 @@
                     </div>
                     <div class="form-group">
                         <label for="deskripsi">Deskripsi</label>
-                        <input type="text"  class="form-control" id="deskripsi" name="deskripsi" rows="3" required>
+                        <input type="text"  class="form-control" id="deskripsi" name="deskripsi" rows="3" value="<?= $row['deskripsi'] ?> " required>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -1,0 +1,23 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Dashboard_model extends CI_Model {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->database();
+    }
+
+    public function get_total_peminjaman()
+    {
+        return $this->db->count_all('peminjaman');
+    }
+
+    public function get_total_pengembalian()
+    {
+        // Asumsi status '0' adalah sudah dikembalikan
+        $this->db->where('status', '0');
+        return $this->db->count_all_results('peminjaman');
+    }
+}

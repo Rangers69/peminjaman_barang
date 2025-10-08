@@ -9,6 +9,11 @@ class Dashboard_model extends CI_Model {
         $this->load->database();
     }
 
+    public function get_total_user_aktif()
+    {
+        return $this->db->count_all('user');
+    }
+
     public function get_total_peminjaman()
     {
         return $this->db->count_all('peminjaman');

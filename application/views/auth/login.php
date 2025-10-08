@@ -123,7 +123,7 @@
             </div>
           </form>
           <p class="mb-1">
-            <a href="forgot-password.html" style="color:#2193b0;">I forgot my password</a>
+            <a href="" style="color:#2193b0;">I forgot my password</a>
           </p>
           <p class="mb-0">
             <a href="<?= base_url('auth/register'); ?>" class="text-center" style="color:#2193b0;">Register a new membership</a>

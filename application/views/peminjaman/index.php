@@ -223,7 +223,10 @@
             '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
             '<"col-md-5 col-12 text-md-right"f>' +
         '>rtip',
-    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+    initComplete: function () {
+      $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
+    }
     });
 
         // Handle Form Add Peminjaman (CREATE)

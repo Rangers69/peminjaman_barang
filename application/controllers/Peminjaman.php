@@ -22,8 +22,14 @@ class Peminjaman extends CI_Controller {
         $data['title'] = 'Data Peminjaman';
         // Ambil data user dari session, sesuaikan dengan sistem otentikasi Anda
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        //var_dump($data['user']);
+        //die();
+        if ($data['user'] ['role'] != 'customer') {
+             $data['peminjaman'] = $this->Peminjaman_model->get_all_peminjaman();
+        } else {
+             $data['peminjaman'] = $this->Peminjaman_model->get_peminjaman_by_user();
 
-        $data['peminjaman'] = $this->Peminjaman_model->get_all_peminjaman();
+        }
 
          //var_dump($data['peminjaman']);
          //die();
@@ -99,12 +105,9 @@ class Peminjaman extends CI_Controller {
     public function update()
     {
         // Set the validation rules using the correct form field names
-        $this->form_validation->set_rules('id_userpinjam', 'ID Userpinjam', 'required|trim');
-        $this->form_validation->set_rules('id_userpinjam', 'ID Peminjam', 'required|trim');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
         $this->form_validation->set_rules('tanggal_pinjam', 'Tanggal Pinjam', 'required');
         $this->form_validation->set_rules('tanggal_kembali', 'Tanggal Kembali', 'required');
-        $this->form_validation->set_rules('status', 'Status', 'required');
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
 
         // Check if validation passes
         if ($this->form_validation->run() == FALSE) {
@@ -113,66 +116,25 @@ class Peminjaman extends CI_Controller {
             return;
         } else {
             // Get the ID for the update from the correct field
-            $id = $this->input->post('id_peminjaman');
+            $id_peminjaman = $this->input->post('id_peminjaman');
 
+            //var_dump($this->input->post('tanggal_kembali'));
+            //die;
             $data_update = [
-                'id_userpinjam'      => $this->input->post('id_userpinjam'),
-                'email'              => $this->input->post('email'),
                 'tanggal_pinjam'     => $this->input->post('tanggal_pinjam'),
                 'tanggal_kembali'    => $this->input->post('tanggal_kembali'),
-                'status'             => $this->input->post('status')
+                'deskripsi'          => $this->input->post('deskripsi'), 
             ];
 
-            // Get old data for image deletion
-            $old_data = $this->Peminjaman_model->get_peminjaman_by_id($id);
+            $data= $this->Peminjaman_model->update_peminjaman($id_peminjaman, $data_update);
 
-            $config['upload_path']   = './uploads/peminjaman/';
-            $config['allowed_types'] = 'gif|jpg|png|jpeg';
-            $config['max_size']      = 2048;
-            $config['encrypt_name']  = TRUE;
 
-            $this->load->library('upload', $config);
-
-            // Handle Gambar Pengambilan
-            if (!empty($_FILES['gambar_pengambilan']['name'])) {
-                if ($this->upload->do_upload('gambar_pengambilan')) {
-                    $upload_data = $this->upload->data();
-                    $data_update['gambar_pengambilan'] = $upload_data['file_name'];
-                    
-                    // Delete old image if it exists
-                    if ($old_data && !empty($old_data['gambar_pengambilan']) && file_exists($config['upload_path'] . $old_data['gambar_pengambilan'])) {
-                        unlink($config['upload_path'] . $old_data['gambar_pengambilan']);
-                    }
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Upload Gambar Pengambilan gagal: ' . $this->upload->display_errors()]);
-                    return;
-                }
-            }
-
-            // Handle Gambar Pengembalian
-            // Note: The HTML form does not have an input for 'edit_gambar_pengembalian'.
-            // You will need to add this to your form for this code to work.
-            if (!empty($_FILES['gambar_pengembalian']['name'])) {
-                $this->upload->initialize($config); // Re-initialize for the second upload
-                if ($this->upload->do_upload('gambar_pengembalian')) {
-                    $upload_data = $this->upload->data();
-                    $data_update['gambar_pengembalian'] = $upload_data['file_name'];
-                    
-                    // Delete old image if it exists
-                    if ($old_data && !empty($old_data['gambar_pengembalian']) && file_exists($config['upload_path'] . $old_data['gambar_pengembalian'])) {
-                        unlink($config['upload_path'] . $old_data['gambar_pengembalian']);
-                    }
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Upload Gambar Pengembalian gagal: ' . $this->upload->display_errors()]);
-                    return;
-                }
-            }
-
-            // Perform the update
-            if ($this->Peminjaman_model->update_peminjaman($id, $data_update)) {
-                echo json_encode(['status' => 'success', 'message' => 'Data peminjaman berhasil diperbarui!']);
+            if ($data == true) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di edit</div>');
+			    redirect('peminjaman');
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Gagal memperbarui data peminjaman.']);
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Gagal di edit</div>');
+			    redirect('peminjaman');
             }
         }
     }

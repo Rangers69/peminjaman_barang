@@ -26,6 +26,14 @@
                             </div>
                         </div>
                         <div class="card-body">
+                        <div class="row align-items-center mb-3">
+                            <div class="col-md-7 col-12 mb-2 mb-md-0">
+                                <div id="peminjamanTable_buttons" class="d-flex flex-wrap"></div>
+                            </div>
+                            <div class="col-md-5 col-12 text-md-right">
+                                <div id="peminjamanTable_filter" class="dataTables_filter"></div>
+                            </div>
+                        </div>
                         <?= $this->session->flashdata('message'); ?>
                             <table id="peminjamanTable" class="table table-bordered table-striped">
                                 <thead>
@@ -88,18 +96,17 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $(document).ready(function() {
-        // Inisialisasi DataTables
-        $('#peminjamanTable').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#peminjamanTable_wrapper .col-md-6:eq(0)');
+    $('#peminjamanTable').DataTable({
+    // ...opsi lain...
+    dom: '<"row align-items-center mb-3"' +
+            '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
+            '<"col-md-5 col-12 text-md-right"f>' +
+        '>rtip',
+    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+    initComplete: function () {
+      $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
+    }
+    });
 
         // Handle Form Add Peminjaman (CREATE)
         $('#formAddPeminjaman').on('submit', function(e) {
@@ -293,5 +300,4 @@
                 }
             })
         });
-    });
-</script>
+ </script>

@@ -17,17 +17,27 @@
 
     <section class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                    <?=  $this->session->userdata('email') ?> 
-                    <br>
-                    <?=  $this->session->userdata('role') ?>
-                    <br>
-                    <?=  $this->session->userdata('id_user') ?>
-                    <br>
-                    <?=  $this->session->userdata('nama') ?>
-                    
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow" style="border-radius: 18px;">
+                        <div class="card-body text-center">
+                            <!-- Foto profil user -->
+                            <?php
+                                // Ganti path foto sesuai field di database Anda, misal $user['foto']
+                                $foto = isset($user['foto']) && $user['foto'] ? base_url('assets/img/profile/' . $user['foto']) : base_url('assets/img/profile/default.png');
+                            ?>
+                            <img src="<?= $foto ?>" alt="Foto Profil" class="rounded-circle mb-3" style="width:110px;height:110px;object-fit:cover;box-shadow:0 2px 8px rgba(33,147,176,0.15);border:4px solid #6dd5ed;">
+                            <h3 class="mb-0"><?= $this->session->userdata('nama') ?></h3>
+                            <p class="text-muted mb-2"><?= $this->session->userdata('email') ?></p>
+                            <span class="badge badge-info px-3 py-2 mb-2" style="font-size:1rem;">
+                                <?= ucfirst($this->session->userdata('role')) ?>
+                            </span>
+                            <div class="mt-3">
+                                <a href="<?= base_url('auth/logout'); ?>" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -35,19 +45,6 @@
     </section>
 </div>
 
-
 <script src="<?= base_url('assets/') ?>plugins/jquery/jquery.min.js"></script>
 <script src="<?= base_url('assets/') ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/jszip/jszip.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/pdfmake/pdfmake.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/pdfmake/vfs_fonts.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="<?= base_url('assets/') ?>plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- ...script lainnya tetap... -->

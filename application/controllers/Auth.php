@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Auth extends CI_Controller {
+class Auth extends CI_Controller 
+{
 
 	public function __construct() {
         parent::__construct();
@@ -39,23 +40,22 @@ class Auth extends CI_Controller {
 		if($user) {
 			// cek password 
 			if(password_verify($password, $user['password'])) {
-				$data = [
-					'email' => $user['email'],
-					'role' => $user['role'],
-					'nama' => $user['nama'],
-					'id_user' => $user['id_user'],
-				];
-				$this->session->set_userdata($data);
-                    if ($user['role'] == 'customer') {
-                        redirect('welcome');
-                    } 
-                } else{
-				$this->session->set_flashdata('massage', '<div class="alert alert-danger" role="alert">Wrong password!</div>');
+					$data = [
+						'email' => $user['email'],
+						'role' => $user['role'],
+						'nama' => $user['nama'],
+						'id_user' => $user['id_user'],
+					];
+					$this->session->set_userdata($data);
+						if ($user['role'] == 'admin') {
+							redirect('welcome');
+						} else {
+							redirect('peminjaman');
+						}
+			}else{
+				$this->session->set_flashdata('massage', '<div class="alert alert-danger" role="alert">User tidak ditemukan!</div>');
 				redirect('auth/login');
 			}
-		}else{
-			$this->session->set_flashdata('massage', '<div class="alert alert-danger" role="alert">User tidak ditemukan!</div>');
-			redirect('auth/login');
 		}
 	
 	}

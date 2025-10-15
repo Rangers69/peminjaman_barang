@@ -19,10 +19,13 @@ class Pengembalian extends CI_Controller {
         // Ambil data user dari session, sesuaikan dengan sistem otentikasi Anda
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
-        $data['pengembalian'] = $this->Pengembalian_model->get_all_pengembalian();
+        if ($data['user'] ['role'] != 'customer') {
+             $data['pengembalian'] = $this->Pengembalian_model->get_all_pengembalian();
+        } else {
+             $data['pengembalian'] = $this->Pengembalian_model->get_pengembalian_by_user();
 
-
-
+        }
+        
         $this->load->view('master/header', $data);
         $this->load->view('master/sidebar', $data);
         $this->load->view('pengembalian/index', $data); // View utama untuk tabel

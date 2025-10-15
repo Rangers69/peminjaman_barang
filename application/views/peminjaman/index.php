@@ -29,6 +29,14 @@
                             </div>
                         </div>
                         <div class="card-body">
+                        <div class="row align-items-center mb-3">
+                            <div class="col-md-7 col-12 mb-2 mb-md-0">
+                                <div id="peminjamanTable_buttons" class="d-flex flex-wrap"></div>
+                            </div>
+                            <div class="col-md-5 col-12 text-md-right">
+                                <div id="peminjamanTable_filter" class="dataTables_filter"></div>
+                            </div>
+                        </div>
                         <?= $this->session->flashdata('message'); ?>
                             <table id="peminjamanTable" class="table table-bordered table-striped">
                                 <thead>
@@ -65,9 +73,8 @@
                                             </td>
                                            
                                             <td class="action-buttons">
-                                                <button class="btn btn-info btn-sm btn-edit-peminjaman" data-id="<?= $row['id_peminjaman']; ?>" data-toggle="modal" data-target="#editPeminjamanModal">
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
+                                                <button data-toggle="modal" data-target="#edit<?= $row['id_peminjaman']?>" class="btn btn-warning btn-sm"><i 
+                                                class="fas fa-edit"></i>Edit</button>
                                                 <a href="<?= base_url('peminjaman/delete/' . $row['id_peminjaman']); ?>" class="btn btn-danger btn-sm" onclick="return 
 												confirm('Apakah anda yakin menghapus data ini?')"><i class="fas fa-trash"></i>Delete</a>
                                                 <a href="<?= base_url('peminjaman/returned/' . $row['id_peminjaman']); ?>" class="btn btn-success btn-sm">
@@ -139,7 +146,9 @@
     </div>
 </div>
 
-<div class="modal fade" id="editPeminjamanModal" tabindex="-1" role="dialog" aria-labelledby="editPeminjamanModalLabel" aria-hidden="true">
+
+ <?php foreach($peminjaman as $row) { ?>
+<div class="modal fade" id="edit<?= $row['id_peminjaman']?>" tabindex="-1" role="dialog" aria-labelledby="editPeminjamanModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -150,40 +159,35 @@
             </div>
             <form id="formEditPeminjaman" enctype="multipart/form-data" action="<?= base_url('peminjaman/update'); ?>" method="post">
                 <div class="modal-body">
-                    <input type="hidden" id="edit_id" name="id_userpinjam">
+                    <input type="hidden" id="edit_id" name="id_peminjaman" value="<?= $row['id_peminjaman']; ?>">
                     
                     <div class="form-group">
                         <label for="edit_id_userpinjam">Nama Peminjam</label>
-                        <input type="text" class="form-control" value="<?= $row['nama_peminjam']; ?>" disabled>
+                        <input type="text" class="form-control" value="<?= $row['nama_peminjam']; ?>" readonly>
                         <input type="hidden" name="id_userpinjam" value="<?= $row['id_userpinjam']; ?>">
                     </div>
                     
                     <div class="form-group">
                         <label for="edit_email">Email</label>
-                        <input type="email" class="form-control" value="<?= $row['email']; ?>" disabled>
+                        <input type="email" class="form-control" value="<?= $row['email']; ?>" readonly>
                         <input type="hidden" name="email" value="<?= $row['email']; ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="edit_tanggal_pinjam">Tanggal Pinjam</label>
-                        <input type="date" class="form-control" id="edit_tanggal_pinjam" name="tanggal_pinjam" required>
+                        <input type="date" class="form-control" id="edit_tanggal_pinjam" name="tanggal_pinjam" value="<?= date('Y-m-d', strtotime($row['tanggal_pinjam'])) ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="edit_tanggal_kembali">Tanggal Kembali</label>
-                        <input type="date" class="form-control" id="edit_tanggal_kembali" name="tanggal_kembali" required>
+                        <input type="date" class="form-control" id="edit_tanggal_kembali" name="tanggal_kembali" value="<?= date('Y-m-d', strtotime($row['tanggal_kembali'])) ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="edit_status">Status</label>
-                        <select class="form-control" id="edit_status" name="status" required>
-                            <option value="Dipinjam">Dipinjam</option>
-                            <option value="Dikembalikan">Dikembalikan</option>
-                        </select>
+                        <input type="text" class="form-control" id="edit_status" name="status" value="<?= $row['status'] ? 'Dipinjam' : 'Dikembalikan'; ?>" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="edit_gambar_pengambilan">Gambar Pengambilan</label>
-                        <input type="file" class="form-control-file" id="edit_gambar_pengambilan" name="gambar_pengambilan" accept="image/*">
-                        <small class="form-text text-muted">Biarkan kosong jika tidak ingin mengubah gambar.</small>
-                        <div id="current_gambar_pengambilan"></div>
+                        <label for="deskripsi">Deskripsi</label>
+                        <input type="text"  class="form-control" id="deskripsi" name="deskripsi" rows="3" value="<?= $row['deskripsi'] ?> " required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -194,6 +198,7 @@
         </div>
     </div>
 </div>
+<?php } ?>
 
 <script src="<?= base_url('assets/') ?>plugins/jquery/jquery.min.js"></script>
 <script src="<?= base_url('assets/') ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -212,18 +217,17 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $(document).ready(function() {
-        // Inisialisasi DataTables
-        $('#peminjamanTable').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#peminjamanTable_wrapper .col-md-6:eq(0)');
+    $('#peminjamanTable').DataTable({
+    // ...opsi lain...
+    dom: '<"row align-items-center mb-3"' +
+            '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
+            '<"col-md-5 col-12 text-md-right"f>' +
+        '>rtip',
+    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+    initComplete: function () {
+      $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
+    }
+    });
 
         // Handle Form Add Peminjaman (CREATE)
         $('#formAddPeminjaman').on('submit', function(e) {
@@ -417,5 +421,4 @@
                 }
             })
         });
-    });
 </script>

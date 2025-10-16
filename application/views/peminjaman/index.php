@@ -33,12 +33,23 @@
                             <div class="col-md-7 col-12 mb-2 mb-md-0">
                                 <div id="peminjamanTable_buttons" class="d-flex flex-wrap"></div>
                             </div>
-                            <div class="col-md-5 col-12 text-md-right">
-                                <div id="peminjamanTable_filter" class="dataTables_filter"></div>
+                        </div>
+                        <div class="row mb-2 align-items-end" style="min-height: 0px;">
+                            <div class="col-auto pr-1" style="margin-left: 500px;">
+                                <input type="date" id="from_date" class="form-control form-control-sm" style="width:110px; font-size:15px; padding:5px 5px;" placeholder="From date">
+                            </div>
+                            <div class="col-auto pr-1">
+                                <input type="date" id="to_date" class="form-control form-control-sm" style="width:110px; font-size:15px; padding:5px 5px;" placeholder="To date">
+                            </div>
+                            <div class="col-auto pr-1">
+                                <button id="filter_date" class="btn btn-primary btn-sm" style="font-size:15px; padding:5px 10px;"><i class="fas fa-search"></i> Cari</button>
+                            </div>
+                            <div class="col-auto">
+                                <button id="reset_date" class="btn btn-secondary btn-sm" style="font-size:15px; padding:5px 10px;">Reset</button>
                             </div>
                         </div>
                         <?= $this->session->flashdata('message'); ?>
-                            <table id="peminjamanTable" class="table table-bordered table-striped">
+                        <table id="peminjamanTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -227,6 +238,46 @@
     initComplete: function () {
       $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
     }
+    });
+        // Tambahkan filter tanggal ke dalam #customFilter
+    $('#customFilter').html(`
+        <input type="date" id="from_date" class="form-control form-control-sm mx-1" style="width: 130px;">
+        <input type="date" id="to_date" class="form-control form-control-sm mx-1" style="width: 130px;">
+        <button id="filter" class="btn btn-primary btn-sm mx-1"><i class="fas fa-filter"></i> Filter</button>
+        <button id="reset" class="btn btn-secondary btn-sm mx-1">Reset</button>
+    `);
+
+    // Filter tanggal DataTables
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var from = $('#from_date').val();
+            var to = $('#to_date').val();
+            var tanggal = data[3]; // Kolom ke-4: Tanggal Pinjam (ubah jika urutan berbeda)
+            var tgl = new Date(tanggal);
+
+            if (from) from = new Date(from);
+            if (to) to = new Date(to);
+
+            if (
+                (!from || tgl >= from) &&
+                (!to || tgl <= to)
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    // Event tombol filter
+    $(document).on('click', '#filter', function() {
+        table.draw();
+    });
+
+    // Event tombol reset
+    $(document).on('click', '#reset', function() {
+        $('#from_date').val('');
+        $('#to_date').val('');
+        table.draw();
     });
 
         // Handle Form Add Peminjaman (CREATE)

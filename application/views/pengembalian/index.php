@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Data Peminjaman</h1>
+                    <h1>Data Pengembalian</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -32,6 +32,20 @@
                             </div>
                             <div class="col-md-5 col-12 text-md-right">
                                 <div id="peminjamanTable_filter" class="dataTables_filter"></div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-end" style="min-height: 0px;">
+                            <div class="col-auto pr-1" style="margin-left: 500px;">
+                                <input type="date" id="from_date" class="form-control form-control-sm" style="width:110px; font-size:15px; padding:5px 5px;" placeholder="From date">
+                            </div>
+                            <div class="col-auto pr-1">
+                                <input type="date" id="to_date" class="form-control form-control-sm" style="width:110px; font-size:15px; padding:5px 5px;" placeholder="To date">
+                            </div>
+                            <div class="col-auto pr-1">
+                                <button id="filter_date" class="btn btn-primary btn-sm" style="font-size:15px; padding:5px 10px;"><i class="fas fa-search"></i> Cari</button>
+                            </div>
+                            <div class="col-auto">
+                                <button id="reset_date" class="btn btn-secondary btn-sm" style="font-size:15px; padding:5px 10px;">Reset</button>
                             </div>
                         </div>
                         <?= $this->session->flashdata('message'); ?>

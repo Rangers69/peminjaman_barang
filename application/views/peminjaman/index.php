@@ -239,44 +239,41 @@
       $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
     }
     });
-        // Tambahkan filter tanggal ke dalam #customFilter
-    $('#customFilter').html(`
-        <input type="date" id="from_date" class="form-control form-control-sm mx-1" style="width: 130px;">
-        <input type="date" id="to_date" class="form-control form-control-sm mx-1" style="width: 130px;">
-        <button id="filter" class="btn btn-primary btn-sm mx-1"><i class="fas fa-filter"></i> Filter</button>
-        <button id="reset" class="btn btn-secondary btn-sm mx-1">Reset</button>
-    `);
 
-    // Filter tanggal DataTables
-    $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-            var from = $('#from_date').val();
-            var to = $('#to_date').val();
-            var tanggal = data[3]; // Kolom ke-4: Tanggal Pinjam (ubah jika urutan berbeda)
-            var tgl = new Date(tanggal);
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        if (settings.nTable.id !== 'peminjamanTable') return true; // biarkan tabel lain
+        var min = $('#from_date').val(); // format YYYY-MM-DD dari input[type=date]
+        var max = $('#to_date').val();
 
-            if (from) from = new Date(from);
-            if (to) to = new Date(to);
+        // ambil data-date dari cell Tanggal Pinjam (kolom ke-4 bila 0-based index = 3)
+        var rowNode = settings.aoData[dataIndex].nTr;
+        var rowDate = $(rowNode).find('td').eq(3).data('date'); // value YYYY-MM-DD set di server
+        if (!rowDate) return true; // kalau tidak ada tanggal di baris, jangan filter
 
-            if (
-                (!from || tgl >= from) &&
-                (!to || tgl <= to)
-            ) {
-                return true;
-            }
-            return false;
+        var rowTime = new Date(rowDate).getTime();
+        var minTime = min ? new Date(min).getTime() : null;
+        var maxTime = max ? new Date(max).getTime() : null;
+
+        if (minTime === null && maxTime === null) {
+            return true;
+        } else if (minTime === null && rowTime <= maxTime) {
+            return true;
+        } else if (maxTime === null && rowTime >= minTime) {
+            return true;
+        } else if (rowTime >= minTime && rowTime <= maxTime) {
+            return true;
         }
-    );
+        return false;
+    });
 
-    // Event tombol filter
-    $(document).on('click', '#filter', function() {
+    // tombol filter -> redraw table
+    $('#filter_date').on('click', function() {
         table.draw();
     });
 
-    // Event tombol reset
-    $(document).on('click', '#reset', function() {
-        $('#from_date').val('');
-        $('#to_date').val('');
+    // tombol reset -> kosongkan input dan redraw
+    $('#reset_date').on('click', function() {
+        $('#from_date, #to_date').val('');
         table.draw();
     });
 

@@ -122,6 +122,43 @@
     }
     });
 
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        if (settings.nTable.id !== 'peminjamanTable') return true; // biarkan tabel lain
+        var min = $('#from_date').val(); // format YYYY-MM-DD dari input[type=date]
+        var max = $('#to_date').val();
+
+        // ambil data-date dari cell Tanggal Pinjam (kolom ke-4 bila 0-based index = 3)
+        var rowNode = settings.aoData[dataIndex].nTr;
+        var rowDate = $(rowNode).find('td').eq(3).data('date'); // value YYYY-MM-DD set di server
+        if (!rowDate) return true; // kalau tidak ada tanggal di baris, jangan filter
+
+        var rowTime = new Date(rowDate).getTime();
+        var minTime = min ? new Date(min).getTime() : null;
+        var maxTime = max ? new Date(max).getTime() : null;
+
+        if (minTime === null && maxTime === null) {
+            return true;
+        } else if (minTime === null && rowTime <= maxTime) {
+            return true;
+        } else if (maxTime === null && rowTime >= minTime) {
+            return true;
+        } else if (rowTime >= minTime && rowTime <= maxTime) {
+            return true;
+        }
+        return false;
+    });
+
+    // tombol filter -> redraw table
+    $('#filter_date').on('click', function() {
+        table.draw();
+    });
+
+    // tombol reset -> kosongkan input dan redraw
+    $('#reset_date').on('click', function() {
+        $('#from_date, #to_date').val('');
+        table.draw();
+    });
+
         // Handle Form Add Peminjaman (CREATE)
         $('#formAddPeminjaman').on('submit', function(e) {
             e.preventDefault();

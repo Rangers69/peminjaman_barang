@@ -110,54 +110,25 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $('#peminjamanTable').DataTable({
-    // ...opsi lain...
-    dom: '<"row align-items-center mb-3"' +
-            '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
-            '<"col-md-5 col-12 text-md-right"f>' +
-        '>rtip',
-    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
-    initComplete: function () {
-      $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
-    }
-    });
+    // tampilkan lebih banyak tombol nomor pagination (atur sebelum inisialisasi DataTable)
+    $.fn.dataTable.ext.pager.numbers_length = 12; // ubah 12 sesuai kebutuhan
 
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        if (settings.nTable.id !== 'peminjamanTable') return true; // biarkan tabel lain
-        var min = $('#from_date').val(); // format YYYY-MM-DD dari input[type=date]
-        var max = $('#to_date').val();
-
-        // ambil data-date dari cell Tanggal Pinjam (kolom ke-4 bila 0-based index = 3)
-        var rowNode = settings.aoData[dataIndex].nTr;
-        var rowDate = $(rowNode).find('td').eq(3).data('date'); // value YYYY-MM-DD set di server
-        if (!rowDate) return true; // kalau tidak ada tanggal di baris, jangan filter
-
-        var rowTime = new Date(rowDate).getTime();
-        var minTime = min ? new Date(min).getTime() : null;
-        var maxTime = max ? new Date(max).getTime() : null;
-
-        if (minTime === null && maxTime === null) {
-            return true;
-        } else if (minTime === null && rowTime <= maxTime) {
-            return true;
-        } else if (maxTime === null && rowTime >= minTime) {
-            return true;
-        } else if (rowTime >= minTime && rowTime <= maxTime) {
-            return true;
+    // simpan instance DataTable ke variabel 'table' supaya table.draw() bekerja
+    var table = $('#peminjamanTable').DataTable({
+        paging: true,
+        pagingType: 'full_numbers', // previous, numbers, simple, full_numbers, ...
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        dom: '<"row align-items-center mb-3"' +
+                '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
+                '<"col-md-5 col-12 text-md-right"f>' +
+            '>rtip',
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        initComplete: function () {
+            $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
         }
-        return false;
     });
-
-    // tombol filter -> redraw table
-    $('#filter_date').on('click', function() {
-        table.draw();
-    });
-
-    // tombol reset -> kosongkan input dan redraw
-    $('#reset_date').on('click', function() {
-        $('#from_date, #to_date').val('');
-        table.draw();
-    });
+    
 
         // Handle Form Add Peminjaman (CREATE)
         $('#formAddPeminjaman').on('submit', function(e) {

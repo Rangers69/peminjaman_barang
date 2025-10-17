@@ -34,20 +34,24 @@
                                 <div id="peminjamanTable_buttons" class="d-flex flex-wrap"></div>
                             </div>
                         </div>
-                        <div class="row mb-2 align-items-end" style="min-height: 0px;">
-                            <div class="col-auto pr-1" style="margin-left: 500px;">
-                                <input type="date" id="from_date" class="form-control form-control-sm" style="width:110px; font-size:15px; padding:5px 5px;" placeholder="From date">
-                            </div>
-                            <div class="col-auto pr-1">
-                                <input type="date" id="to_date" class="form-control form-control-sm" style="width:110px; font-size:15px; padding:5px 5px;" placeholder="To date">
-                            </div>
-                            <div class="col-auto pr-1">
-                                <button id="filter_date" class="btn btn-primary btn-sm" style="font-size:15px; padding:5px 10px;"><i class="fas fa-search"></i> Cari</button>
+                        <div class="row mb-2 justify-content-center align-items-end">
+                            <div class="col-auto pr-1" style="margin-left: 350px;">
+                                <label for="from_date" class="form-label mb-0 small">From</label>
+                                <input type="date" id="from_date" class="form-control form-control-sm" style="width: 130px;">
                             </div>
                             <div class="col-auto">
-                                <button id="reset_date" class="btn btn-secondary btn-sm" style="font-size:15px; padding:5px 10px;">Reset</button>
+                                <label for="to_date" class="form-label mb-0 small">To</label>
+                                <input type="date" id="to_date" class="form-control form-control-sm" style="width: 130px;">
                             </div>
-                        </div>
+                            <div class="col-auto">
+                                <button id="filter_date" class="btn btn-primary btn-sm">
+                                <i class="fas fa-search"></i> Cari
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button id="reset_date" class="btn btn-secondary btn-sm">Reset</button>
+                            </div>
+                         </div>
                         <?= $this->session->flashdata('message'); ?>
                         <table id="peminjamanTable" class="table table-bordered table-striped">
                                 <thead>
@@ -228,54 +232,53 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $('#peminjamanTable').DataTable({
-    // ...opsi lain...
-    dom: '<"row align-items-center mb-3"' +
-            '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
-            '<"col-md-5 col-12 text-md-right"f>' +
-        '>rtip',
-    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
-    initComplete: function () {
-      $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
-    }
-    });
+    // tampilkan lebih banyak tombol nomor pagination (atur sebelum inisialisasi DataTable)
+    $.fn.dataTable.ext.pager.numbers_length = 12; // ubah 12 sesuai kebutuhan
 
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        if (settings.nTable.id !== 'peminjamanTable') return true; // biarkan tabel lain
-        var min = $('#from_date').val(); // format YYYY-MM-DD dari input[type=date]
-        var max = $('#to_date').val();
-
-        // ambil data-date dari cell Tanggal Pinjam (kolom ke-4 bila 0-based index = 3)
-        var rowNode = settings.aoData[dataIndex].nTr;
-        var rowDate = $(rowNode).find('td').eq(3).data('date'); // value YYYY-MM-DD set di server
-        if (!rowDate) return true; // kalau tidak ada tanggal di baris, jangan filter
-
-        var rowTime = new Date(rowDate).getTime();
-        var minTime = min ? new Date(min).getTime() : null;
-        var maxTime = max ? new Date(max).getTime() : null;
-
-        if (minTime === null && maxTime === null) {
-            return true;
-        } else if (minTime === null && rowTime <= maxTime) {
-            return true;
-        } else if (maxTime === null && rowTime >= minTime) {
-            return true;
-        } else if (rowTime >= minTime && rowTime <= maxTime) {
-            return true;
+    // simpan instance DataTable ke variabel 'table' supaya table.draw() bekerja
+    var table = $('#peminjamanTable').DataTable({
+        paging: true,
+        pagingType: 'full_numbers', // previous, numbers, simple, full_numbers, ...
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        dom: '<"row align-items-center mb-3"' +
+                '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
+                '<"col-md-5 col-12 text-md-right"f>' +
+            '>rtip',
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        initComplete: function () {
+            $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
         }
+    });
+
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    if (settings.nTable.id !== 'peminjamanTable') return true;
+
+    const from = $('#from_date').val();
+    const to = $('#to_date').val();
+    const rowDate = $(settings.aoData[dataIndex].nTr).find('td').eq(3).data('date'); // kolom ke-4
+
+    if (!rowDate) return true;
+
+    const rowTime = new Date(rowDate).getTime();
+    const fromTime = from ? new Date(from).getTime() : null;
+    const toTime = to ? new Date(to).getTime() : null;
+
+    // logika lebih ringkas
+    if ((fromTime && rowTime < fromTime) || (toTime && rowTime > toTime)) {
         return false;
+    }
+    return true;
     });
 
-    // tombol filter -> redraw table
-    $('#filter_date').on('click', function() {
-        table.draw();
-    });
+    // Tombol filter & reset
+    $('#filter_date').on('click', () => $('#peminjamanTable').DataTable().draw());
 
-    // tombol reset -> kosongkan input dan redraw
-    $('#reset_date').on('click', function() {
+    $('#reset_date').on('click', () => {
         $('#from_date, #to_date').val('');
-        table.draw();
+        $('#peminjamanTable').DataTable().draw();
     });
+
 
         // Handle Form Add Peminjaman (CREATE)
         $('#formAddPeminjaman').on('submit', function(e) {

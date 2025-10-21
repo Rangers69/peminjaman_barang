@@ -34,25 +34,21 @@
                                 <div id="peminjamanTable_buttons" class="d-flex flex-wrap"></div>
                             </div>
                         </div>
-                        <div class="row mb-2 justify-content-center align-items-end">
-                            <div class="col-auto pr-1" style="margin-left: 350px;">
-                                <label for="from_date" class="form-label mb-0 small">From</label>
-                                <input type="date" id="from_date" class="form-control form-control-sm" style="width: 130px;">
+                        <form id="filterForm" class="form-inline mb-3" method="get" action="<?= base_url('peminjaman'); ?>">
+                            <div class="form-group mr-2">
+                                <label for="from_date" class="mr-1 small">From</label>
+                                <input type="date" name="from_date" id="from_date" class="form-control form-control-sm" style="width:140px;"
+                                    value="<?= isset($from_date) ? $from_date : '' ?>">
                             </div>
-                            <div class="col-auto">
-                                <label for="to_date" class="form-label mb-0 small">To</label>
-                                <input type="date" id="to_date" class="form-control form-control-sm" style="width: 130px;">
+                            <div class="form-group mr-2">
+                                <label for="to_date" class="mr-1 small">To</label>
+                                <input type="date" name="to_date" id="to_date" class="form-control form-control-sm" style="width:140px;"
+                                    value="<?= isset($to_date) ? $to_date : '' ?>">
                             </div>
-                            <div class="col-auto">
-                                <button id="filter_date" class="btn btn-primary btn-sm">
-                                <i class="fas fa-search"></i> Cari
-                                </button>
-                            </div>
-                            <div class="col-auto">
-                                <button id="reset_date" class="btn btn-secondary btn-sm">Reset</button>
-                            </div>
-                         </div>
-                        <?= $this->session->flashdata('message'); ?>
+                            <button type="submit" id="filter_date" class="btn btn-primary btn-sm mr-1"><i class="fas fa-search"></i> Cari</button>
+                            <button type="button" id="reset_date" class="btn btn-secondary btn-sm">Reset</button>
+                        </form>
+                         <?= $this->session->flashdata('message'); ?>
                         <table id="peminjamanTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>

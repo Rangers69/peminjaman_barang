@@ -45,8 +45,8 @@
                                 <input type="date" name="to_date" id="to_date" class="form-control form-control-sm" style="width:140px;"
                                     value="<?= isset($to_date) ? $to_date : '' ?>">
                             </div>
-                            <button type="submit" id="filter_date" class="btn btn-primary btn-sm mr-1"><i class="fas fa-search"></i> Cari</button>
-                            <button type="button" id="reset_date" class="btn btn-secondary btn-sm">Reset</button>
+                            <button type="submit" id="filter_date" class="btn btn-primary btn-sm mr-1">Cari</button>
+                            <a href="<?= base_url('peminjaman'); ?>" class="btn btn-secondary btn-sm mr-1">Reset</a>
                         </form>
                          <?= $this->session->flashdata('message'); ?>
                         <table id="peminjamanTable" class="table table-bordered table-striped">

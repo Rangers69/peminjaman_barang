@@ -31,14 +31,7 @@ class Peminjaman extends CI_Controller {
     $data['to_date']   = $to;
 
     // gunakan method model yang mendukung filter jika tersedia
-    if (method_exists($this->Peminjaman_model, 'get_peminjaman_filtered')) {
-        if (!empty($data['user']) && isset($data['user']['role']) && $data['user']['role'] != 'customer') {
-            $data['peminjaman'] = $this->Peminjaman_model->get_peminjaman_filtered($from, $to);
-        } else {
-            $user_id = isset($data['user']['id_user']) ? $data['user']['id_user'] : null;
-            $data['peminjaman'] = $this->Peminjaman_model->get_peminjaman_filtered($from, $to, $user_id);
-        }
-    } else {
+   
         // fallback: ambil semua lalu filter di PHP
         if (!empty($data['user']) && isset($data['user']['role']) && $data['user']['role'] != 'customer') {
             $rows = $this->Peminjaman_model->get_all_peminjaman();
@@ -63,7 +56,7 @@ class Peminjaman extends CI_Controller {
         }
 
         $data['peminjaman'] = $rows;
-    }
+    
 
     $this->load->view('master/header', $data);
     $this->load->view('master/sidebar', $data);

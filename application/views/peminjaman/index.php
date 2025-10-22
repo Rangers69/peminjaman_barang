@@ -34,7 +34,7 @@
                                 <div id="peminjamanTable_buttons" class="d-flex flex-wrap"></div>
                             </div>
                         </div>
-                        <form id="filterForm" class="form-inline mb-3" method="get" action="<?= base_url('peminjaman'); ?>">
+                        <form id="filterForm" class="form-inline mb-3 justify-content-end" method="get" action="<?= base_url('peminjaman'); ?>">
                             <div class="form-group mr-2">
                                 <label for="from_date" class="mr-1 small">From</label>
                                 <input type="date" name="from_date" id="from_date" class="form-control form-control-sm" style="width:140px;"

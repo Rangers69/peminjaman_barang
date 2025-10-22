@@ -8,27 +8,33 @@ class Pengembalian extends CI_Controller {
         parent::__construct();
         $this->load->model('Pengembalian_model');
         $this->load->library('session');
-        $this->load->helper('url'); // Pastikan helper URL dimuat
-        
+        $this->load->helper(['url', 'form']);
     }
-
-    // Tampilan utama Data Peminjaman
+    
     public function index() 
     {
         $data['title'] = 'Data Pengembalian';
-        // Ambil data user dari session, sesuaikan dengan sistem otentikasi Anda
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['user'] = $this->db->get_where('user', [
+            'email' => $this->session->userdata('email')
+        ])->row_array();
 
-        if ($data['user'] ['role'] != 'customer') {
-             $data['pengembalian'] = $this->Pengembalian_model->get_all_pengembalian();
+        // Ambil input filter tanggal
+        $from_date = $this->input->get('from_date');
+        $to_date   = $this->input->get('to_date');
+
+        if ($data['user']['role'] != 'customer') {
+            $data['pengembalian'] = $this->Pengembalian_model->get_all_pengembalian($from_date, $to_date);
         } else {
-             $data['pengembalian'] = $this->Pengembalian_model->get_pengembalian_by_user();
-
+            $data['pengembalian'] = $this->Pengembalian_model->get_pengembalian_by_user($from_date, $to_date);
         }
-        
+
+        // Simpan tanggal agar tetap tampil di form
+        $data['from_date'] = $from_date;
+        $data['to_date']   = $to_date;
+
         $this->load->view('master/header', $data);
         $this->load->view('master/sidebar', $data);
-        $this->load->view('pengembalian/index', $data); // View utama untuk tabel
+        $this->load->view('pengembalian/index', $data);
         $this->load->view('master/footer');
     }
 }

@@ -18,27 +18,51 @@ class Peminjaman extends CI_Controller {
 
     // Tampilan utama Data Peminjaman
     public function index() 
-    {
-        $data['title'] = 'Data Peminjaman';
-        // Ambil data user dari session, sesuaikan dengan sistem otentikasi Anda
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-        //var_dump($data['user']);
-        //die();
-        if ($data['user'] ['role'] != 'customer') {
-             $data['peminjaman'] = $this->Peminjaman_model->get_all_peminjaman();
-        } else {
-             $data['peminjaman'] = $this->Peminjaman_model->get_peminjaman_by_user();
+{
+    $data['title'] = 'Data Peminjaman';
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
+    // ambil filter dari GET (format YYYY-MM-DD)
+    $from = $this->input->get('from_date', true);
+    $to   = $this->input->get('to_date', true);
+
+    // teruskan ke view supaya input tetap terisi
+    $data['from_date'] = $from;
+    $data['to_date']   = $to;
+
+    // gunakan method model yang mendukung filter jika tersedia
+   
+        // fallback: ambil semua lalu filter di PHP
+        if (!empty($data['user']) && isset($data['user']['role']) && $data['user']['role'] != 'customer') {
+            $rows = $this->Peminjaman_model->get_all_peminjaman();
+        } else {
+            $rows = $this->Peminjaman_model->get_peminjaman_by_user();
         }
 
-         //var_dump($data['peminjaman']);
-         //die();
+        // pastikan $rows adalah array
+        $rows = is_array($rows) ? $rows : [];
 
-        $this->load->view('master/header', $data);
-        $this->load->view('master/sidebar', $data);
-        $this->load->view('peminjaman/index', $data); // View utama untuk tabel
-        $this->load->view('master/footer');
-    }
+        if (!empty($from) || !empty($to)) {
+            $fromTs = $from ? strtotime($from) : null;
+            $toTs   = $to ? strtotime($to) : null;
+
+            $rows = array_values(array_filter($rows, function($r) use ($fromTs, $toTs) {
+                if (empty($r['tanggal_pinjam'])) return false;
+                $d = strtotime($r['tanggal_pinjam']);
+                if ($fromTs && $d < $fromTs) return false;
+                if ($toTs && $d > $toTs) return false;
+                return true;
+            }));
+        }
+
+        $data['peminjaman'] = $rows;
+    
+
+    $this->load->view('master/header', $data);
+    $this->load->view('master/sidebar', $data);
+    $this->load->view('peminjaman/index', $data);
+    $this->load->view('master/footer');
+}
 
     // AJAX: Tambah data peminjaman (CREATE)
     public function add()

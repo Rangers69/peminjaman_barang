@@ -33,12 +33,23 @@
                             <div class="col-md-7 col-12 mb-2 mb-md-0">
                                 <div id="peminjamanTable_buttons" class="d-flex flex-wrap"></div>
                             </div>
-                            <div class="col-md-5 col-12 text-md-right">
-                                <div id="peminjamanTable_filter" class="dataTables_filter"></div>
-                            </div>
                         </div>
-                        <?= $this->session->flashdata('message'); ?>
-                            <table id="peminjamanTable" class="table table-bordered table-striped">
+                        <form id="filterForm" class="form-inline mb-3 justify-content-end" method="get" action="<?= base_url('peminjaman'); ?>">
+                            <div class="form-group mr-2">
+                                <label for="from_date" class="mr-1 small">From</label>
+                                <input type="date" name="from_date" id="from_date" class="form-control form-control-sm" style="width:140px;"
+                                    value="<?= isset($from_date) ? $from_date : '' ?>">
+                            </div>
+                            <div class="form-group mr-2">
+                                <label for="to_date" class="mr-1 small">To</label>
+                                <input type="date" name="to_date" id="to_date" class="form-control form-control-sm" style="width:140px;"
+                                    value="<?= isset($to_date) ? $to_date : '' ?>">
+                            </div>
+                            <button type="submit" id="filter_date" class="btn btn-primary btn-sm mr-1">Cari</button>
+                            <a href="<?= base_url('peminjaman'); ?>" class="btn btn-secondary btn-sm mr-1">Reset</a>
+                        </form>
+                         <?= $this->session->flashdata('message'); ?>
+                        <table id="peminjamanTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -217,17 +228,53 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $('#peminjamanTable').DataTable({
-    // ...opsi lain...
-    dom: '<"row align-items-center mb-3"' +
-            '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
-            '<"col-md-5 col-12 text-md-right"f>' +
-        '>rtip',
-    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
-    initComplete: function () {
-      $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
-    }
+    // tampilkan lebih banyak tombol nomor pagination (atur sebelum inisialisasi DataTable)
+    $.fn.dataTable.ext.pager.numbers_length = 12; // ubah 12 sesuai kebutuhan
+
+    // simpan instance DataTable ke variabel 'table' supaya table.draw() bekerja
+    var table = $('#peminjamanTable').DataTable({
+        paging: true,
+        pagingType: 'full_numbers', // previous, numbers, simple, full_numbers, ...
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        dom: '<"row align-items-center mb-3"' +
+                '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
+                '<"col-md-5 col-12 text-md-right"f>' +
+            '>rtip',
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        initComplete: function () {
+            $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
+        }
     });
+
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    if (settings.nTable.id !== 'peminjamanTable') return true;
+
+    const from = $('#from_date').val();
+    const to = $('#to_date').val();
+    const rowDate = $(settings.aoData[dataIndex].nTr).find('td').eq(3).data('date'); // kolom ke-4
+
+    if (!rowDate) return true;
+
+    const rowTime = new Date(rowDate).getTime();
+    const fromTime = from ? new Date(from).getTime() : null;
+    const toTime = to ? new Date(to).getTime() : null;
+
+    // logika lebih ringkas
+    if ((fromTime && rowTime < fromTime) || (toTime && rowTime > toTime)) {
+        return false;
+    }
+    return true;
+    });
+
+    // Tombol filter & reset
+    $('#filter_date').on('click', () => $('#peminjamanTable').DataTable().draw());
+
+    $('#reset_date').on('click', () => {
+        $('#from_date, #to_date').val('');
+        $('#peminjamanTable').DataTable().draw();
+    });
+
 
         // Handle Form Add Peminjaman (CREATE)
         $('#formAddPeminjaman').on('submit', function(e) {

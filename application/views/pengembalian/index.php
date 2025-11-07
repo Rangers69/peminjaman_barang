@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Data Peminjaman</h1>
+                    <h1>Data Pengembalian</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -34,6 +34,20 @@
                                 <div id="peminjamanTable_filter" class="dataTables_filter"></div>
                             </div>
                         </div>
+                        <form id="filterForm" class="form-inline mb-3 justify-content-end" method="get" action="<?= base_url('pengembalian'); ?>">
+                            <div class="form-group mr-2">
+                                <label for="from_date" class="mr-1 small">From</label>
+                                <input type="date" name="from_date" id="from_date" class="form-control form-control-sm" style="width:140px;"
+                                    value="<?= isset($from_date) ? $from_date : '' ?>">
+                            </div>
+                            <div class="form-group mr-2">
+                                <label for="to_date" class="mr-1 small">To</label>
+                                <input type="date" name="to_date" id="to_date" class="form-control form-control-sm" style="width:140px;"
+                                    value="<?= isset($to_date) ? $to_date : '' ?>">
+                            </div>
+                            <button type="submit" id="filter_date" class="btn btn-primary btn-sm mr-1">Cari</button>
+                            <a href="<?= base_url('pengembalian'); ?>" class="btn btn-secondary btn-sm mr-1">Reset</a>
+                        </form>
                         <?= $this->session->flashdata('message'); ?>
                             <table id="peminjamanTable" class="table table-bordered table-striped">
                                 <thead>
@@ -96,17 +110,25 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $('#peminjamanTable').DataTable({
-    // ...opsi lain...
-    dom: '<"row align-items-center mb-3"' +
-            '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
-            '<"col-md-5 col-12 text-md-right"f>' +
-        '>rtip',
-    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
-    initComplete: function () {
-      $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
-    }
+    // tampilkan lebih banyak tombol nomor pagination (atur sebelum inisialisasi DataTable)
+    $.fn.dataTable.ext.pager.numbers_length = 12; // ubah 12 sesuai kebutuhan
+
+    // simpan instance DataTable ke variabel 'table' supaya table.draw() bekerja
+    var table = $('#peminjamanTable').DataTable({
+        paging: true,
+        pagingType: 'full_numbers', // previous, numbers, simple, full_numbers, ...
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        dom: '<"row align-items-center mb-3"' +
+                '<"col-md-7 col-12 mb-2 mb-md-0"B>' +
+                '<"col-md-5 col-12 text-md-right"f>' +
+            '>rtip',
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        initComplete: function () {
+            $('#peminjamanTable_wrapper .dataTables_paginate').addClass('pt-3');
+        }
     });
+    
 
         // Handle Form Add Peminjaman (CREATE)
         $('#formAddPeminjaman').on('submit', function(e) {

@@ -1,84 +1,93 @@
-<style>
-.form-section {
-    width: 100vw;                  /* Pastikan lebar penuh */
-    min-height: 100vh;             /* Tinggi penuh layar */
-    background-image: url('<?= base_url("assets/dist/img/muh15.png"); ?>');
-    background-size: cover;        /* Gambar menutupi seluruh layar */
-    background-position: center;   /* Fokus tengah gambar */
-    background-repeat: no-repeat;
+<!-- Main Content -->
+    <main class="content">
+        <div class="form-container">
+            <div class="form-header">
+                <h1><i class="fas fa-clipboard-check"></i> Form Peminjaman Tamu</h1>
+            </div>
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+            <div class="form-card">
+                <form action="<?= base_url('home/store') ?>" method="POST" enctype="multipart/form-data" id="peminjamanForm">
+                    <!-- Nama Tamu -->
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-user"></i> Nama Tamu
+                        </label>
+                        <div class="input-with-icon">
+                            <input type="text" name="userpeminjaman_tamu" class="form-input" placeholder="Masukkan nama lengkap" required>
+                            <i class="fas fa-user input-icon"></i>
+                        </div>
+                        <div class="error-message" id="nama-error">
+                            <i class="fas fa-exclamation-circle"></i> Nama harus diisi (minimal 3 karakter)
+                        </div>
+                    </div>
 
-    padding: 0;
-    margin: 0;
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <div class="input-with-icon">
+                            <input type="email" name="email" class="form-input" placeholder="contoh@email.com" required>
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                        <div class="error-message" id="email-error">
+                            <i class="fas fa-exclamation-circle"></i> Email tidak valid
+                        </div>
+                    </div>
 
-    position: relative;
-}
+                    <!-- Tanggal -->
+                    <div class="form-group date-group">
+                        <div>
+                            <label class="form-label required">
+                                <i class="fas fa-calendar-alt"></i> Tanggal Pinjam
+                            </label>
+                            <input type="date" name="tanggal_pinjam" class="form-input" required>
+                        </div>
+                        <div>
+                            <label class="form-label required">
+                                <i class="fas fa-calendar-check"></i> Tanggal Kembali
+                            </label>
+                            <input type="date" name="tanggal_kembali" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="error-message" id="tanggal-error">
+                        <i class="fas fa-exclamation-circle"></i> Tanggal kembali harus setelah tanggal pinjam
+                    </div>
 
-/* Layer gelap */
-.form-section::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(0px);
-    z-index: 1;
-}
+                    <!-- Deskripsi -->
+                    <div class="form-group">
+                        <label class="form-label required">
+                            <i class="fas fa-file-alt"></i> Deskripsi Peminjaman
+                        </label>
+                        <textarea name="deskripsi" class="form-textarea" placeholder="Tujuan peminjaman, fasilitas yang ingin dipinjam, dan informasi lainnya" required></textarea>
+                        <div class="info-text">Jelaskan secara detail tujuan dan kebutuhan peminjaman</div>
+                        <div class="error-message" id="deskripsi-error">
+                            <i class="fas fa-exclamation-circle"></i> Deskripsi harus diisi (minimal 10 karakter)
+                        </div>
+                    </div>
 
-.form-container {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 420px;              /* Form kecil tapi background full */
-    padding: 20px;
-}
+                    <!-- Gambar Pengambilan -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-camera"></i> Gambar Pengambilan
+                        </label>
+                        <div class="file-container">
+                            <input type="file" name="gambar_pengambilan" id="gambar_pengambilan" class="form-file" accept="image/*">
+                            <label for="gambar_pengambilan" class="file-label">
+                                <span class="file-text" id="file-text">Pilih file gambar (opsional)</span>
+                                <span class="file-btn">
+                                    <i class="fas fa-folder-open"></i> Pilih File
+                                </span>
+                            </label>
+                        </div>
+                        <div class="info-text">Format: JPG, PNG, GIF (maksimal 2MB)</div>
+                    </div>
 
-.form-card {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.35);
-}
-
-h3 {
-    text-align: center;
-    color: white;
-    text-shadow: 0 3px 6px rgba(0,0,0,0.8);
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 2;
-}
-</style>
-
-<section class="form-section">
-    <div class="form-container">
-
-        <h3>Form Peminjaman Tamu</h3>
-
-        <form action="<?= base_url('home/store') ?>" method="POST" class="form-card" enctype="multipart/form-data">
-
-            <label>Nama Tamu</label>
-            <input type="text" name="userpeminjaman_tamu" required>
-
-            <label>Email</label>
-            <input type="email" name="email" required>
-
-            <label>Tanggal Pinjam</label>
-            <input type="date" name="tanggal_pinjam" required>
-
-            <label>Tanggal Kembali</label>
-            <input type="date" name="tanggal_kembali" required>
-
-            <label>Deskripsi</label>
-            <textarea name="deskripsi" required></textarea>
-
-            <label>Gambar Pengambilan</label>
-            <input type="file" name="gambar_pengambilan">
-
-            <button type="submit" class="btn-primary">Kirim</button>
-        </form>
-
-    </div>
-</section>
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Kirim
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>

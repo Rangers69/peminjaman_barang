@@ -6,7 +6,20 @@
             </div>
 
             <div class="form-card">
-                <form action="<?= base_url('home/store') ?>" method="POST" enctype="multipart/form-data" id="peminjamanForm">
+                <?php if($this->session->flashdata('error')): ?>
+                    <div class="alert alert-danger">
+                        <?= $this->session->flashdata('error') ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if($this->session->flashdata('success')): ?>
+                    <div class="alert alert-success">
+                        <?= $this->session->flashdata('success') ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php echo validation_errors('<div class="alert alert-danger">', '</div>'); ?>
+                <form action="<?= base_url('home/store_success') ?>" method="POST" enctype="multipart/form-data" id="peminjamanForm">
                     <!-- Nama Tamu -->
                     <div class="form-group">
                         <label class="form-label required">

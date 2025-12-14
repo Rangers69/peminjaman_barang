@@ -6,7 +6,7 @@ class Home extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Peminjaman_model');
+        $this->load->model('Peminjaman_tamu_model');
         $this->load->library('upload');
     }
 
@@ -17,7 +17,7 @@ class Home extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function store()
+    public function store_success()
     {
         // Konfigurasi upload
         $config['upload_path']   = './uploads/peminjaman/';
@@ -51,7 +51,7 @@ class Home extends CI_Controller {
             'gambar_pengembalian' => null
         ];
 
-        $insert = $this->Peminjaman_model->tambahPeminjaman($data);
+        $insert = $this->Peminjaman_tamu_model->tambahPeminjaman($data);
 
         if ($insert) {
             echo "<script>alert('Data peminjaman berhasil disimpan'); window.location.href='" . base_url() . "';</script>";

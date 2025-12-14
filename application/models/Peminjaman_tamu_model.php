@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Peminjaman_model extends CI_Model {
+class Peminjaman_tamu_model extends CI_Model {
 
     public function tambahPeminjaman($data)
     {

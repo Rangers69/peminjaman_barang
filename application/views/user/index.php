@@ -40,6 +40,20 @@
 			</div>
 			<!-- /.card-header -->
 			<div class="card-body">
+				<form id="filterForm" class="form-inline mb-3 justify-content-end" method="get" action="<?= base_url('user'); ?>">
+                            <div class="form-group mr-2">
+                                <label for="from_date" class="mr-1 small">From</label>
+                                <input type="date" name="from_date" id="from_date" class="form-control form-control-sm" style="width:140px;"
+                                    value="<?= isset($from_date) ? $from_date : '' ?>">
+                            </div>
+                            <div class="form-group mr-2">
+                                <label for="to_date" class="mr-1 small">To</label>
+                                <input type="date" name="to_date" id="to_date" class="form-control form-control-sm" style="width:140px;"
+                                    value="<?= isset($to_date) ? $to_date : '' ?>">
+                            </div>
+                            <button type="submit" id="filter_date" class="btn btn-primary btn-sm mr-1">Cari</button>
+                            <a href="<?= base_url('user'); ?>" class="btn btn-secondary btn-sm mr-1">Reset</a>
+                        </form>
 				<div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
 					<div class="row">
 						<div class="col-sm-12">
@@ -53,6 +67,7 @@
                                         <th class="py-3 px-4 text-left">Role</th>
                                         <th class="py-3 px-4 text-left">No Hp</th>
                                         <th class="py-3 px-4 text-left">Alamat</th>
+										<th class="py-3 px-4 text-left">Created at</th>
                                         <th class="py-3 px-4 text-left">Action</th>
 									</tr>
 								</thead>
@@ -65,6 +80,7 @@
                                         <td><?= $u['role']; ?></td>
                                         <td><?= $u['no_telp']; ?></td>
                                         <td><?= $u['alamat']; ?></td>
+										<td><?= date('d F Y', strtotime($u['created_at'])); ?></td>
                                         <td>
                                             <button data-toggle="modal" data-target="#edit<?= $u['id_user']?>" class="btn btn-warning btn-sm"><i 
                                             class="fas fa-edit"></i>Edit</button>

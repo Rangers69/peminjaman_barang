@@ -8,6 +8,13 @@ class User_model extends CI_Model
         return $this->db->get('user')->result_array();
     }
 
+    public function get_users_by_date_range($from, $to)
+    {
+        $this->db->where('DATE(created_at) >=', $from);
+        $this->db->where('DATE(created_at) <=', $to);
+        return $this->db->get('user')->result_array();
+    }
+
     public function insert_user($data)
     {
         return $this->db->insert('user', $data);

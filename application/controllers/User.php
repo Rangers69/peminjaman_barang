@@ -19,8 +19,20 @@ class User extends CI_Controller
         $data['title'] = 'User Management';
         // Ambil data user dari session, sesuaikan dengan sistem otentikasi Anda
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        // ambil filter dari GET (format YYYY-MM-DD)
+        $from = $this->input->get('from_date', true);
+        $to   = $this->input->get('to_date', true);
 
-        $data['users'] = $this->User_model->get_all_users();
+        // teruskan ke view supaya input tetap terisi
+        $data['from_date'] = $from;
+        $data['to_date'] = $to;
+
+        // Ambil data user dengan filter tanggal jika ada
+        if ($from && $to) {
+            $data['users'] = $this->User_model->get_users_by_date_range($from, $to);
+        } else {
+            $data['users'] = $this->User_model->get_all_users();
+        }
 
         $this->load->view('master/header', $data);
         $this->load->view('master/sidebar', $data);

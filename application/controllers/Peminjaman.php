@@ -72,53 +72,63 @@ class Peminjaman extends CI_Controller {
         $this->form_validation->set_rules('tanggal_pinjam', 'Tanggal Pinjam', 'required');
         $this->form_validation->set_rules('tanggal_kembali', 'Tanggal Kembali', 'required');
 
-
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() === FALSE) {
             echo json_encode(['status' => 'error', 'message' => validation_errors()]);
-        } else {
-            $config['upload_path']   = './uploads/peminjaman/';
-            $config['allowed_types'] = 'gif|jpg|png|jpeg';
-            $config['max_size']      = 2048; // 2MB
-            $config['encrypt_name']  = TRUE;
+            return;
+        }
 
-            $this->load->library('upload', $config);
+        // Pastikan folder upload bisa ditulis
+        $config['upload_path']   = './uploads/peminjaman/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size']      = 2048; // 2MB
+        $config['encrypt_name']  = TRUE;
 
-            $gambar_pengambilan = '';
-            if (!empty($_FILES['gambar_pengambilan']['name'])) {
-                if ($this->upload->do_upload('gambar_pengambilan')) {
-                    $gambar_pengambilan = $this->upload->data('file_name');
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Upload Gambar Pengambilan gagal: ' . $this->upload->display_errors()]);
-                    return;
-                }
-            }
-            //var_dump($this->input->post('id_userpinjam'));
-            //die;
-            $data = [
-                'id_userpinjam'        => $this->input->post('id_userpinjam'),
-                'email'                => $this->input->post('email'),
-                'tanggal_pinjam'       => $this->input->post('tanggal_pinjam'),
-                'tanggal_kembali'      => $this->input->post('tanggal_kembali'),
-                'status'               => 1, // Default status
-                'deskripsi'      => $this->input->post('deskripsi'),
-                'gambar_pengambilan'   => $gambar_pengambilan,
-                'gambar_pengembalian'  => NULL // Awalnya kosong
-            ];
+        if (!is_dir($config['upload_path'])) {
+            mkdir($config['upload_path'], 0777, true);
+        }
 
-            if ($this->Peminjaman_model->insert_peminjaman($data)) {
-                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Peminjaman berhasil ditambahkan</div>');
-			redirect('peminjaman');
-                echo json_encode(['status' => 'success', 'message' => 'Data peminjaman berhasil ditambahkan!']);
+        $this->load->library('upload', $config);
+
+        $gambar_pengambilan = '';
+        if (!empty($_FILES['gambar_pengambilan']['name'])) {
+            if ($this->upload->do_upload('gambar_pengambilan')) {
+                $gambar_pengambilan = $this->upload->data('file_name');
             } else {
-                if (!empty($gambar_pengambilan) && file_exists($config['upload_path'] . $gambar_pengambilan)) {
-                    unlink($config['upload_path'] . $gambar_pengambilan);
-                }
-                echo json_encode(['status' => 'error', 'message' => 'Gagal menambahkan data peminjaman.']);
+                echo json_encode(['status' => 'error', 'message' => 'Upload Gambar Pengambilan gagal: ' . strip_tags($this->upload->display_errors())]);
+                return;
             }
+        }
+
+        $data = [
+            'id_userpinjam'       => $this->input->post('id_userpinjam'),
+            'email'               => $this->input->post('email'),
+            'tanggal_pinjam'      => $this->input->post('tanggal_pinjam'),
+            'tanggal_kembali'     => $this->input->post('tanggal_kembali'),
+            'status'              => 1,
+            'deskripsi'           => $this->input->post('deskripsi'),
+            'gambar_pengambilan'  => $gambar_pengambilan,
+            'gambar_pengembalian' => NULL
+        ];
+
+        $insert = $this->Peminjaman_model->insert_peminjaman($data);
+
+        if ($insert) {
+            echo json_encode(['status' => 'success', 'message' => 'Data peminjaman berhasil ditambahkan!']);
+        } else {
+            // hapus gambar kalau insert gagal
+            if (!empty($gambar_pengambilan) && file_exists($config['upload_path'] . $gambar_pengambilan)) {
+                unlink($config['upload_path'] . $gambar_pengambilan);
+            }
+
+            $db_error = $this->db->error(); // tampilkan error database
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Gagal menambahkan data peminjaman.',
+                'db_error' => $db_error
+            ]);
         }
     }
 
-    // AJAX: Ambil data peminjaman berdasarkan ID (READ untuk form EDIT)
     public function get_peminjaman_by_id($id)
     {
         $data = $this->Peminjaman_model->get_peminjaman_by_id($id);
